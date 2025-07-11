@@ -38,15 +38,16 @@ const submit = () => {
         <form @submit.prevent="submit" class="flex flex-col gap-6">
             <div class="grid gap-6">
                 <div class="grid gap-2">
-                    <Label for="email">Email address</Label>
+                    <Label for="email">Email or username</Label>
                     <Input
                         id="email"
-                        type="email"
+                        type="text"
                         autofocus
                         :tabindex="1"
                         autocomplete="email"
                         v-model="form.email"
-                        placeholder="email@example.com"
+                        placeholder="Email or username"
+                        :aria-invalid="!!form.errors.email"
                     />
                     <InputError :message="form.errors.email" />
                 </div>
@@ -65,6 +66,7 @@ const submit = () => {
                         autocomplete="current-password"
                         v-model="form.password"
                         placeholder="Password"
+                        :aria-invalid="!!form.errors.password"
                     />
                     <InputError :message="form.errors.password" />
                 </div>

@@ -1,30 +1,43 @@
 <script setup lang="ts">
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { type NavItem, type SharedData } from '@/types';
+import { type Menus, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
+import * as icons from 'lucide-vue-next';
+import { resolveDynamicComponent } from 'vue';
 
 defineProps<{
-    items: NavItem[];
+  items: Menus[];
 }>();
+
+function toPascalCase(str: string): string {
+  return str.replace(/(^\w|-\w)/g, s => s.replace('-', '').toUpperCase())
+}
+
+function getSafeIcon(name: string) {
+  const pascal = toPascalCase(name) as keyof typeof icons;
+  return resolveDynamicComponent(icons[pascal] ?? icons.FileLock);
+}
 
 const page = usePage<SharedData>();
 </script>
-
 <template>
-    <SidebarGroup class="px-2 py-0">
-        <SidebarGroupLabel>Platform</SidebarGroupLabel>
-        <SidebarMenu>
-            <SidebarMenuItem v-for="item in items" :key="item.title">
-                <SidebarMenuButton 
-                    as-child :is-active="item.href === page.url"
-                    :tooltip="item.title"
-                >
-                    <Link :href="item.href">
-                        <component :is="item.icon" />
-                        <span>{{ item.title }}</span>
-                    </Link>
-                </SidebarMenuButton>
-            </SidebarMenuItem>
-        </SidebarMenu>
-    </SidebarGroup>
+  <SidebarGroup class="px-2 py-0">
+    <div v-for="item in items" :key="item.id">
+      <SidebarGroupLabel v-if="item.is_divider">{{ item.label_name }}</SidebarGroupLabel>
+      <SidebarMenu v-else>
+        <SidebarMenuItem>
+          <SidebarMenuButton
+            as-child
+            :is-active="page.url.startsWith('/' + item.url)"
+            :tooltip="item.label_name"
+          >
+            <Link :href="item.link">
+              <component :is="getSafeIcon(item.icon)" class="w-4 h-4" />
+              <span>{{ item.label_name }}</span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    </div>
+  </SidebarGroup>
 </template>

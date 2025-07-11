@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
-
+import { ref } from 'vue'
 import DeleteUser from '@/components/DeleteUser.vue';
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import InputError from '@/components/InputError.vue';
@@ -28,14 +28,28 @@ const breadcrumbs: BreadcrumbItem[] = [
 const page = usePage<SharedData>();
 const user = page.props.auth.user as User;
 
+const avatarPreview = ref<string | null>(user.avatar_url ?? null)
+
 const form = useForm({
     name: user.name,
     email: user.email,
+    avatar: null as File | null,
 });
 
+const handleAvatarChange = (e: Event) => {
+  const target = e.target as HTMLInputElement;
+  if (target.files && target.files.length > 0) {
+    const file = target.files[0];
+    form.avatar = file;
+    avatarPreview.value = URL.createObjectURL(file);
+  }
+};
+
+
 const submit = () => {
-    form.patch(route('profile.update'), {
+    form.post(route('profile.update'), {
         preserveScroll: true,
+        forceFormData: true,
     });
 };
 </script>
@@ -49,6 +63,20 @@ const submit = () => {
                 <HeadingSmall title="Profile information" description="Update your name and email address" />
 
                 <form @submit.prevent="submit" class="space-y-6">
+                    <div v-if="avatarPreview" class="mb-4">
+                        <img :src="avatarPreview" alt="Avatar preview" class="w-24 h-24 rounded-full object-cover" />
+                    </div>
+                    <div class="grid gap-2">
+                        <Label for="avatar">Avatar</Label>
+                        <Input
+                            id="avatar"
+                            type="file"
+                            class="mt-1 block w-full"
+                            @change="handleAvatarChange"
+                        />
+                        <InputError class="mt-2" :message="form.errors.avatar" />
+                    </div>
+
                     <div class="grid gap-2">
                         <Label for="name">Name</Label>
                         <Input id="name" class="mt-1 block w-full" v-model="form.name" required autocomplete="name" placeholder="Full name" />

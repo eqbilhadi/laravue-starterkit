@@ -51,6 +51,27 @@ class HandleInertiaRequests extends Middleware
                 'location' => $request->url(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'menus' => $this->getMenus()?->map->toArray(),
+            'flash' => function () {
+                return [
+                    'success' => session('success'),
+                    'error' => session('error'),
+                ];
+            },
         ];
+    }
+
+    protected function getMenus()
+    {
+        $user = \Illuminate\Support\Facades\Auth::user();
+        if ($user !== null) {
+            return \Illuminate\Support\Facades\Cache::remember("menus.{$user->id}", now()->addHours(5), function () use ($user) {
+                return \App\Models\Menu::query()
+                    ->whereHas('roles', fn($query) => $query->whereIn('role_id', $user->roles->pluck('id')))
+                    ->whereIsActive(true)
+                    ->orderBy('sort_num', 'asc')
+                    ->get();
+            });
+        }
     }
 }

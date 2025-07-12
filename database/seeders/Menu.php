@@ -18,7 +18,7 @@ class Menu extends Seeder
 
         $menus = [
             [
-                'icon' => 'fa-solid fa-house-blank',
+                'icon' => 'LayoutDashboard',
                 'label_name' => 'Dashboard',
                 'controller_name' => 'app\Http\Controllers\DashboardController',
                 'route_name' => 'dashboard',
@@ -27,7 +27,7 @@ class Menu extends Seeder
                 'is_divider' => false
             ],
             [
-                'icon' => 'fa-solid fa-square-sliders',
+                'icon' => 'BookKey',
                 'label_name' => 'Access Settings',
                 'controller_name' => null,
                 'route_name' => 'rbac.index',
@@ -36,7 +36,7 @@ class Menu extends Seeder
                 'is_divider' => true
             ],
             [
-                'icon' => 'fa-sharp fa-solid fa-square-list',
+                'icon' => 'SquareMenu',
                 'label_name' => 'Navigation Management',
                 'controller_name' => 'app\Http\Controllers\Rbac\NavigationManagementController',
                 'route_name' => 'rbac.nav.index',
@@ -45,7 +45,7 @@ class Menu extends Seeder
                 'is_divider' => false
             ],
             [
-                'icon' => 'fa-solid fa-key',
+                'icon' => 'KeyRound',
                 'label_name' => 'Permission Management',
                 'controller_name' => 'app\Http\Controllers\Rbac\PermissionManagementController',
                 'route_name' => 'rbac.permission.index',
@@ -54,7 +54,7 @@ class Menu extends Seeder
                 'is_divider' => false
             ],
             [
-                'icon' => 'fa-sharp fa-solid fa-shield-keyhole',
+                'icon' => 'Shield',
                 'label_name' => 'Role Management',
                 'controller_name' => 'app\Http\Controllers\Rbac\RoleManagementController',
                 'route_name' => 'rbac.role.index',
@@ -63,7 +63,7 @@ class Menu extends Seeder
                 'is_divider' => false
             ],
             [
-                'icon' => 'fa-solid fa-users-gear',
+                'icon' => 'User',
                 'label_name' => 'User Management',
                 'controller_name' => 'app\Http\Controllers\Rbac\UserManagementController',
                 'route_name' => 'rbac.user.index',

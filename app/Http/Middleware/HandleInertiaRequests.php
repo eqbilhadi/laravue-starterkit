@@ -52,12 +52,10 @@ class HandleInertiaRequests extends Middleware
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'menus' => $this->getMenus()?->map->toArray(),
-            'flash' => function () {
-                return [
-                    'success' => session('success'),
-                    'error' => session('error'),
-                ];
-            },
+            'flash' => [
+                'success' => fn() => $request->session()->get('success'),
+                'error' => fn() => $request->session()->get('error')
+            ],
         ];
     }
 

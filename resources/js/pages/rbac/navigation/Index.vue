@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { defineProps, ref, watch } from 'vue'
-import { router, Head, usePage, Link } from '@inertiajs/vue3'
+import { defineProps, ref } from 'vue'
+import { router, Head, Link } from '@inertiajs/vue3'
 import AppLayout from '@/layouts/AppLayout.vue'
 import { type BreadcrumbItem, type SharedData } from '@/types'
 import { watchDebounced } from '@vueuse/core'
@@ -13,7 +13,6 @@ import Button from '@/components/ui/button/Button.vue'
 import { Trash2, Pencil, CirclePlus } from 'lucide-vue-next'
 import { Toaster } from '@/components/ui/sonner'
 import 'vue-sonner/style.css'
-import { toast } from 'vue-sonner'
 
 // Table components
 import {
@@ -100,7 +99,8 @@ watchDebounced(
 )
 
 const breadcrumbs: BreadcrumbItem[] = [
-  { title: 'Dashboard', href: '/dashboard' },
+  { title: 'Access Settings', href: '' },
+  { title: 'Navigation Management', href: route('rbac.nav.index') },
 ]
 
 function toPascalCase(str: string): string {
@@ -120,16 +120,7 @@ function handleDelete(item: Menu) {
   })
 }
 
-const page = usePage<SharedData>();
 
-watch(
-  () => page.props.flash,
-  flash => {
-    if (flash.success) toast.success(flash.success)
-    if (flash.error) toast.error(flash.error)
-  },
-  { immediate: true }
-)
 </script>
 
 <template>
@@ -202,9 +193,12 @@ watch(
                       </TableCell>
                       <TableCell class="text-right pe-3">
                         <div class="flex justify-end gap-1">
-                          <Button variant="outline" size="icon">
+                          <Link
+                            :href="route('rbac.nav.edit', { id: menu.id })"
+                            class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9"
+                          >
                             <Pencil class="w-4 h-4" stroke="currentColor" />
-                          </Button>
+                          </Link>
                           <Button
                             variant="outline"
                             size="icon"
@@ -227,9 +221,12 @@ watch(
                       <TableCell>{{ menu.url }}</TableCell>
                       <TableCell class="text-right pe-3">
                         <div class="flex justify-end gap-1">
-                          <Button variant="outline" size="icon">
+                          <Link
+                            :href="route('rbac.nav.edit', { id: menu.id })"
+                            class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9"
+                          >
                             <Pencil class="w-4 h-4" stroke="currentColor" />
-                          </Button>
+                          </Link>
                           <Button
                             variant="outline"
                             size="icon"
@@ -262,6 +259,5 @@ watch(
       <!-- Pagination -->
     </div>
     <DeleteConfirmDialog ref="deleteDialog" />
-    <Toaster position="top-right" />
   </AppLayout>
 </template>

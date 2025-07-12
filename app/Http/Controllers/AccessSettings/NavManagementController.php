@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Navigation;
+namespace App\Http\Controllers\AccessSettings;
 
 use Throwable;
 use App\Models\Menu;

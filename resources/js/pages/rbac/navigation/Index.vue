@@ -2,7 +2,7 @@
 import { defineProps, ref } from 'vue'
 import { router, Head, Link } from '@inertiajs/vue3'
 import AppLayout from '@/layouts/AppLayout.vue'
-import { type BreadcrumbItem, type SharedData } from '@/types'
+import { type BreadcrumbItem } from '@/types'
 import { watchDebounced } from '@vueuse/core'
 import Input from '@/components/ui/input/Input.vue'
 import { Search } from 'lucide-vue-next'
@@ -11,7 +11,7 @@ import * as icons from 'lucide-vue-next';
 import { resolveDynamicComponent } from 'vue';
 import Button from '@/components/ui/button/Button.vue'
 import { Trash2, Pencil, CirclePlus } from 'lucide-vue-next'
-import { Toaster } from '@/components/ui/sonner'
+import type { Pagination } from '@/types/pagination'
 import 'vue-sonner/style.css'
 
 // Table components
@@ -48,17 +48,8 @@ interface Menu {
   is_divider: number
 }
 
-interface MenuPagination {
-  data: Menu[]
-  current_page: number
-  last_page: number
-  total: number
-  per_page: number
-  links: { url: string | null; label: string; active: boolean }[]
-}
-
 const props = defineProps<{
-  data: MenuPagination
+  data: Pagination<Menu>
   filters: {
     search?: string
     status?: string

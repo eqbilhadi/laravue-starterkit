@@ -13,8 +13,12 @@ class Permission extends Seeder
      */
     public function run(): void
     {
-        $createMenu = ModelsPermission::firstOrCreate(['name' => 'create-menu', 'group' => 'Navigation']);
-        $editMenu = ModelsPermission::firstOrCreate(['name' => 'edit-menu', 'group' => 'Navigation']);
-        $deleteMenu = ModelsPermission::firstOrCreate(['name' => 'delete-menu', 'group' => 'Navigation']);
+        $createMenu = ModelsPermission::firstOrCreate(['name' => 'create menu', 'group' => 'Navigation']);
+        $editMenu = ModelsPermission::firstOrCreate(['name' => 'edit menu', 'group' => 'Navigation']);
+        $deleteMenu = ModelsPermission::firstOrCreate(['name' => 'delete menu', 'group' => 'Navigation']);
+        
+        $createPermission = ModelsPermission::firstOrCreate(['name' => 'create permission', 'group' => 'Permission']);
+        $editPermission = ModelsPermission::firstOrCreate(['name' => 'edit permission', 'group' => 'Permission']);
+        $deletePermission = ModelsPermission::firstOrCreate(['name' => 'delete permission', 'group' => 'Permission']);
     }
 }

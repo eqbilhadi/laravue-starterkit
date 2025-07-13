@@ -71,21 +71,27 @@ const onPageChange = (page: number) => {
   })
 }
 
+function clearFilters() {
+  search.value = ''
+  status.value = ''
+}
+
 watchDebounced(
   [search, status],
   ([newSearch, newStatus]) => {
-    router.get(route('rbac.nav.index'), {
-      search: newSearch,
-      status: newStatus,
-    }, {
+    const query: Record<string, string> = {}
+    if (newSearch) query.search = newSearch
+    if (newStatus) query.status = newStatus
+
+    router.get(route('rbac.nav.index'), query, {
       preserveState: true,
       preserveScroll: true,
       replace: true,
     })
   },
   {
-    debounce: 500, // delay dalam milidetik
-    maxWait: 1000, // opsional: maksimal tunggu sebelum dijalankan
+    debounce: 500,
+    maxWait: 1000,
   }
 )
 
@@ -110,12 +116,10 @@ function handleDelete(item: Menu) {
     })
   })
 }
-
-
 </script>
 
 <template>
-  <Head title="Dashboard" />
+  <Head title="Navigation Management" />
 
   <AppLayout :breadcrumbs="breadcrumbs">
     <div class="p-6 space-y-4">
@@ -160,6 +164,14 @@ function handleDelete(item: Menu) {
               ]"
               placeholder="Select Status"
             />
+            <Button
+              variant="outline"
+              class="h-9 px-3 py-2"
+              @click="clearFilters"
+              v-if="search || status"
+            >
+              Clear Filter
+            </Button>
           </div>
         </CardHeader>
         <CardContent>

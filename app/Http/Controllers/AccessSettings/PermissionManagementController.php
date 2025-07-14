@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\AccessSettings;
 
-use App\Http\Controllers\Controller;
+use Throwable;
+use Inertia\Inertia;
 use App\Models\Permission;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 
 class PermissionManagementController extends Controller
 {
@@ -17,18 +19,79 @@ class PermissionManagementController extends Controller
             $query->where('name', 'like', "%{$search}%");
         }
 
-        if ($request->has('status')) {
-            $status = $request->input('status');
-            $query->when(!is_null($status), function ($query) use ($status) {
-                $query->where('is_active', $status);
+        if ($request->has('group')) {
+            $group = $request->input('group');
+            $query->when(!is_null($group), function ($query) use ($group) {
+                $query->where('group', $group);
             });
         }
 
-        $data = $query->paginate(1)->withQueryString();
+        $data = $query->paginate(10)->withQueryString();
         return Inertia::render('rbac/permission/Index', [
             'data' => $data,
-            'filters' => $request->only(['search', 'status']),
-            'controllers' => Permission::select('group')->distinct()->pluck('group'),
+            'filters' => $request->only(['search', 'group']),
+            'groups' => Permission::select('group')
+                ->distinct()
+                ->pluck('group')
+                ->map(fn($group) => [
+                    'label' => $group,
+                    'value' => $group,
+                ])
+                ->values(),
         ]);
+    }
+
+    public function store(Request $request)
+    {
+        try {
+            $data = $request->validate([
+                'name' => 'required|string|max:255',
+                'group' => 'required|string|max:255',
+            ]);
+    
+            Permission::create($data);
+    
+            return session()->flash('success', 'Permission created successfully.');
+        } catch (Throwable $e) {
+            Log::error('Permission create failed', [
+                'error' => $e->getMessage(),
+            ]);
+
+            return session()->flash('error', 'Failed to create permission. Please try again.');
+        }
+    }
+
+    public function update(Request $request, Permission $sysPermission)
+    {
+        try {
+            $data = $request->validate([
+                'name' => 'required|string|max:255',
+                'group' => 'required|string|max:255',
+            ]);
+    
+            $sysPermission->update($data);
+    
+            return session()->flash('success', 'Permission updated successfully.');
+        } catch (Throwable $e) {
+            Log::error('Permission update failed', [
+                'error' => $e->getMessage(),
+            ]);
+
+            return session()->flash('error', 'Failed to update permission. Please try again.');
+        }
+    }
+
+    public function destroy(Permission $sysPermission)
+    {
+        try {
+            $sysPermission->delete();
+            return session()->flash('success', 'Permission deleted successfully.');
+        } catch (Throwable $e) {
+            Log::error('Permission delete failed', [
+                'error' => $e->getMessage(),
+            ]);
+
+            return session()->flash('error', 'Failed to delete permission. Please try again.');
+        }
     }
 }

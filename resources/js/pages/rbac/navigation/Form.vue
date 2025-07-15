@@ -102,6 +102,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                   v-model="form.label_name"
                   placeholder="Label of the menu"
                   tabindex="1"
+                  autofocus
                 />
                 <InputError :message="form.errors.label_name" />
               </div>

@@ -130,14 +130,15 @@ function openEdit(permission: Permission) {
         <CardHeader>
           <div class="flex items-center justify-between">
             <div class="flex flex-col gap-1">
-              <CardTitle>Permission</CardTitle>
-              <CardDescription>Table of list permission</CardDescription>
+              <CardTitle>Permission Management</CardTitle>
+              <CardDescription>View and organize permissions that control user access to features.</CardDescription>
             </div>
             <Button
               class="bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2"
               @click="openCreate"
             >
-              <CirclePlus class="mr-1" /> Add Permission
+              <CirclePlus class="mr-1" /> 
+              <span class="hidden lg:inline">Add Permission</span>
             </Button>
           </div>
         </CardHeader>

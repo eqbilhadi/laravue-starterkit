@@ -127,14 +127,15 @@ function handleDelete(item: Menu) {
         <CardHeader>
           <div class="flex items-center justify-between">
             <div class="flex flex-col gap-1">
-              <CardTitle>Navigation</CardTitle>
-              <CardDescription>Table of list navigation</CardDescription>
+              <CardTitle>Navigation Settings</CardTitle>
+              <CardDescription>Manage the structure and appearance of navigation items in the application.</CardDescription>
             </div>
             <Link
               :href="route('rbac.nav.create')"
               class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3"
             >
-              <CirclePlus class="text-primary-foreground mr-0.5" /> Add Navigation
+              <CirclePlus class="text-primary-foreground mr-0.5" /> 
+              <span class="hidden lg:inline">Add Navigation</span>
             </Link>
           </div>
         </CardHeader>

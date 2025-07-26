@@ -22,7 +22,7 @@ class UserRole extends Seeder
         $userDeveloper = User::firstOrCreate(
             ['email' => 'developer@example.com'],
             [
-                'name' => 'developer',
+                'name' => fake()->name(),
                 'password' => 'password',
                 'username' => 'developer',
                 'birthplace' => fake()->city(),
@@ -36,7 +36,7 @@ class UserRole extends Seeder
         $userAdmin = User::firstOrCreate(
             ['email' => 'admin@example.com'],
             [
-                'name' => 'admin',
+                'name' => fake()->name(),
                 'password' => 'password',
                 'username' => 'admin',
                 'birthplace' => fake()->city(),
@@ -50,7 +50,7 @@ class UserRole extends Seeder
         $userStudent = User::firstOrCreate(
             ['email' => 'student@example.com'],
             [
-                'name' => 'student',
+                'name' => fake()->name(),
                 'password' => 'password',
                 'username' => 'student',
                 'birthplace' => fake()->city(),
@@ -64,7 +64,7 @@ class UserRole extends Seeder
         $userTeacher = User::firstOrCreate(
             ['email' => 'teacher@example.com'],
             [
-                'name' => 'teacher',
+                'name' => fake()->name(),
                 'password' => 'password',
                 'username' => 'teacher',
                 'birthplace' => fake()->city(),

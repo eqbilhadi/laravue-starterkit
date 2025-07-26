@@ -4,9 +4,11 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use Illuminate\Support\Str;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -68,5 +70,33 @@ class User extends Authenticatable
         return $this->avatar 
             ? route('stream.file', $this->avatar) 
             : null;
+    }
+
+    protected function avatarUrl(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if ($this->avatar) {
+                    return route('stream.file', $this->avatar);
+                }
+
+                if ($this->avatar == null && $this->gender == "l") {
+                    return asset('avatar-fallback/blank-avatar-man.jpg');
+                }
+
+                if ($this->avatar == null && $this->gender == "p") {
+                    return asset('avatar-fallback/blank-avatar-woman.jpg');
+                }
+
+                return null;
+            }
+        );
+    }
+
+    protected function mainRole(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => Str::ucfirst($this->roles()->first()?->name)
+        );
     }
 }

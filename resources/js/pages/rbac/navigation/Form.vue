@@ -152,7 +152,7 @@ const breadcrumbs: BreadcrumbItem[] = [
               </div>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-1 gap-4 mt-4">
-              <div class="flex items-center justify-between border rounded-md px-4 py-2">
+              <div class="flex items-center justify-between border rounded-md px-4 dark:bg-input/30 py-2">
                 <div class="flex items-center space-x-2">
                   <Switch v-model="form.is_divider" id="is_divider" tabindex="6" />
                   <Label for="is_divider" class="text-sm font-medium">Divider Menu</Label>
@@ -162,7 +162,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                 </span>
               </div>
 
-              <div class="flex items-center justify-between border rounded-md px-4 py-2">
+              <div class="flex items-center justify-between border rounded-md px-4 dark:bg-input/30 py-2">
                 <div class="flex items-center space-x-2">
                   <Switch v-model="form.is_active" id="is_active" tabindex="7" />
                   <Label for="is_active" class="text-sm font-medium">Active Menu</Label>

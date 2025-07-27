@@ -177,15 +177,15 @@ function handleDelete(item: Menu) {
         </CardHeader>
         <CardContent>
           <!-- Table -->
-          <div class="overflow-hidden rounded-lg border border-gray-200 mb-3">
+          <div class="overflow-hidden rounded-lg border border-gray-200 mb-3 dark:border-zinc-800">
             <Table>
-              <TableHeader class="bg-gray-100 text-left text-gray-700">
+              <TableHeader class="bg-gray-100 text-left text-gray-700 dark:bg-zinc-800">
                 <TableRow>
-                  <TableHead class="ps-3">Label</TableHead>
-                  <TableHead>Controller</TableHead>
-                  <TableHead>Route</TableHead>
-                  <TableHead>URL</TableHead>
-                  <TableHead class="text-right pe-3">Action</TableHead>
+                  <TableHead class="ps-3 dark:text-foreground">Label</TableHead>
+                  <TableHead class="dark:text-foreground">Controller</TableHead>
+                  <TableHead class="dark:text-foreground">Route</TableHead>
+                  <TableHead class="dark:text-foreground">URL</TableHead>
+                  <TableHead class="text-right pe-3 dark:text-foreground">Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

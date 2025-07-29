@@ -10,7 +10,7 @@ import BaseSelect from '@/components/BaseSelect.vue'
 import * as icons from 'lucide-vue-next';
 import { resolveDynamicComponent } from 'vue';
 import Button from '@/components/ui/button/Button.vue'
-import { Trash2, Pencil, CirclePlus } from 'lucide-vue-next'
+import { Trash2, Pencil, CirclePlus, ArrowDownUp } from 'lucide-vue-next'
 import type { Pagination } from '@/types/pagination'
 import 'vue-sonner/style.css'
 
@@ -46,6 +46,7 @@ interface Menu {
   route_name: string
   url: string
   is_divider: number
+  children?: Menu[]
 }
 
 const props = defineProps<{
@@ -116,6 +117,10 @@ function handleDelete(item: Menu) {
     })
   })
 }
+
+const goToSortPage = () => {
+  router.get(route('rbac.nav.sort'));
+};
 </script>
 
 <template>
@@ -130,13 +135,19 @@ function handleDelete(item: Menu) {
               <CardTitle>Navigation Settings</CardTitle>
               <CardDescription>Manage the structure and appearance of navigation items in the application.</CardDescription>
             </div>
-            <Link
-              :href="route('rbac.nav.create')"
-              class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3"
-            >
-              <CirclePlus class="text-primary-foreground mr-0.5" /> 
-              <span class="hidden lg:inline">Add Navigation</span>
-            </Link>
+            <div class="grid gap-3 grid-cols-2">
+              <Button @click="goToSortPage" class="cursor-pointer">
+                <ArrowDownUp class="text-primary-foreground mr-0.5" />
+                <span class="hidden lg:inline">Sort Navigation</span>
+              </Button>
+              <Link
+                :href="route('rbac.nav.create')"
+                class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3"
+              >
+                <CirclePlus class="text-primary-foreground mr-0.5" /> 
+                <span class="hidden lg:inline">Add Navigation</span>
+              </Link>
+            </div>
           </div>
         </CardHeader>
         <CardHeader>
@@ -191,7 +202,7 @@ function handleDelete(item: Menu) {
               <TableBody>
                 <template v-if="data.data.length != 0">
                   <TableRow v-for="menu in data.data" :key="menu.id">
-                    <template v-if="menu.is_divider">
+                    <template v-if="menu.is_divider || menu.children?.length">
                       <TableCell :colspan="4" class="font-semibold ps-3 text-center">
                         {{ menu.label_name }}
                       </TableCell>
@@ -205,7 +216,7 @@ function handleDelete(item: Menu) {
                           </Link>
                           <Button
                             variant="outline"
-                            size="icon"
+                            size="icon" class="cursor-pointer"
                             @click="handleDelete(menu)"
                           >
                             <Trash2 class="w-4 h-4" stroke="currentColor" />
@@ -233,7 +244,7 @@ function handleDelete(item: Menu) {
                           </Link>
                           <Button
                             variant="outline"
-                            size="icon"
+                            size="icon" class="cursor-pointer"
                             @click="handleDelete(menu)"
                           >
                             <Trash2 class="w-4 h-4" stroke="currentColor" />

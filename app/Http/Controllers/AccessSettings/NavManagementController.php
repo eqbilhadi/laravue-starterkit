@@ -17,7 +17,7 @@ class NavManagementController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Menu::query();
+        $query = Menu::query()->with('children');
 
         if ($search = $request->input('search')) {
             $query->where('label_name', 'like', "%{$search}%");
@@ -81,6 +81,70 @@ class NavManagementController extends Controller
             ]);
 
             return redirect()->back()->withInput()->with('error', 'Failed to update menu. Please try again.');
+        }
+    }
+
+    public function sort()
+    {
+        $lists = Menu::orderBy('sort_num')->whereNull('parent_id')->get()->map(function ($menu) {
+            return [
+                'id' => $menu->id,
+                'name' => $menu->label_name,
+                'icon' => $menu->icon,
+                'sort' => $menu->sort_num,
+                'is_divider' => $menu->is_divider,
+                'children' => $menu->children->map(function ($child) {
+                    return [
+                        'id' => $child->id,
+                        'name' => $child->label_name,
+                        'icon' => $child->icon,
+                        'sort' => $child->sort_num,
+                        'is_divider' => $child->is_divider,
+                        'link' => $child->link, // Ensure link is included
+                    ];
+                })->toArray(),
+            ];
+        });
+
+        return Inertia::render('rbac/navigation/Sort', [
+            'lists' => $lists,
+        ]);
+    }
+
+    public function sortUpdate(Request $request)
+    {
+        $newOrder = $request->input('newOrder', []);
+
+        if (empty($newOrder)) {
+            return redirect()->back()->with('error', 'No order data provided.');
+        }
+
+        try {
+            $this->saveNestedOrder($newOrder);
+            foreach (User::pluck('id') as $userId) {
+                Cache::forget("menus.{$userId}");
+            }
+            return redirect()->route('rbac.nav.index')->with('success', 'Menu order updated successfully.');
+        } catch (Throwable $e) {
+            Log::error('Menu sort update failed', [
+                'error' => $e->getMessage(),
+            ]);
+
+            return redirect()->back()->withInput()->with('error', 'Failed to update menu order. Please try again.');
+        }
+    }
+
+    private function saveNestedOrder(array $items, $parentId = null)
+    {
+        foreach ($items as $index => $item) {
+            Menu::where('id', $item['id'])->update([
+                'sort_num' => $item['sort_num'],
+                'parent_id' => $parentId,
+            ]);
+
+            if (!empty($item['children'])) {
+                $this->saveNestedOrder($item['children'], $item['id']);
+            }
         }
     }
 

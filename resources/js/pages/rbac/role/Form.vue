@@ -27,11 +27,19 @@ interface RoleFormData {
   [key: string]: string | boolean | string[] | number[];
 }
 
+interface NavigationItem {
+  id: number;
+  label_name: string;
+  link: string;
+  parent_id?: number | null;
+  children?: NavigationItem[];
+}
+
 const props = defineProps<{
   role?: Partial<RoleFormData> & { id: string };
   color?: string;
   permissions?: { id: number; name: string; group: string }[];
-  navigations?: { id: number; label_name: string; link: string }[];
+  navigations?: NavigationItem[];
 }>();
 
 const page = usePage<SharedData>();

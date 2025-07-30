@@ -40,7 +40,12 @@ class RoleManagementController extends Controller
     public function create()
     {
         $permissions = Permission::orderBy('group')->get(['id', 'name', 'group'])->toArray();
-        $menus = Menu::latest()->where('is_active', true)->get(['id', 'label_name'])->toArray();
+        $menus = Menu::orderBy('sort_num', 'asc')
+                    ->with('children', fn($query) => $query->whereIsActive(true))
+                    ->whereNull('parent_id')
+                    ->whereIsActive(true)
+                    ->get(['id', 'label_name', 'sort_num'])
+                    ->toArray();
 
         return Inertia::render('rbac/role/Form', [
             'permissions' => $permissions,
@@ -89,8 +94,13 @@ class RoleManagementController extends Controller
     {
         $sysRole->load(['permissions:id', 'menus:id']);
         $permissions = Permission::orderBy('group')->get(['id', 'name', 'group'])->toArray();
-        $menus = Menu::latest()->where('is_active', true)->get(['id', 'label_name'])->toArray();
-
+        $menus = Menu::orderBy('sort_num', 'asc')
+                    ->with('children', fn($query) => $query->whereIsActive(true))
+                    ->whereNull('parent_id')
+                    ->whereIsActive(true)
+                    ->get(['id', 'label_name', 'sort_num'])
+                    ->toArray();
+        
         return Inertia::render('rbac/role/Form', [
             'permissions' => $permissions,
             'navigations' => $menus,
@@ -121,13 +131,8 @@ class RoleManagementController extends Controller
                 'color' => $request->color,
             ]);
 
-            if ($request->filled('permissions')) {
-                $sysRole->syncPermissions($request->permissions);
-            }
-
-            if ($request->filled('menus')) {
-                $sysRole->menus()->sync($request->menus);
-            }
+            $sysRole->syncPermissions($request->permissions);
+            $sysRole->menus()->sync($request->menus);
             foreach (User::pluck('id') as $userId) {
                 Cache::forget("menus.{$userId}");
             }

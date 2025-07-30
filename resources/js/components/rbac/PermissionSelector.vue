@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import { CheckIcon } from "lucide-vue-next";
+import { CheckIcon, Minus } from "lucide-vue-next";
 import CheckboxGroup from "@/components/rbac/CheckboxGroup.vue";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Button from "../ui/button/Button.vue";
@@ -47,6 +47,12 @@ const filteredGroupedPermissions = computed(() => {
 const isGroupChecked = (group: string) => {
   const groupItems = groupedPermissions.value[group] ?? [];
   return groupItems.every((p) => props.modelValue.includes(p.id));
+};
+
+const isGroupIndeterminate = (group: string) => {
+  const groupItems = groupedPermissions.value[group] ?? [];
+  const checkedCount = groupItems.filter((p) => props.modelValue.includes(p.id)).length;
+  return checkedCount > 0 && checkedCount < groupItems.length;
 };
 
 const toggleGroup = (group: string, checked: boolean) => {
@@ -118,9 +124,7 @@ const allVisibleSelected = computed(() => {
                 <label
                   class="flex items-center gap-2 cursor-pointer select-none justify-between"
                 >
-                  <span class="font-semibold text-sm text-muted-foreground">{{
-                    group
-                  }}</span>
+                  <span class="font-bold text-sm text-foreground">{{ group }}</span>
                   <input
                     type="checkbox"
                     class="peer hidden"
@@ -128,11 +132,19 @@ const allVisibleSelected = computed(() => {
                     @change="e => toggleGroup(group, (e.target as HTMLInputElement).checked)"
                   />
                   <div
-                    class="h-4 w-4 shrink-0 rounded-sm border border-primary shadow flex items-center justify-center peer-checked:bg-primary peer-checked:text-primary-foreground transition-colors me-17"
+                    class="h-4 w-4 shrink-0 rounded-sm border border-primary shadow flex items-center justify-center transition-colors me-8"
+                    :class="{
+                      'bg-primary text-white':
+                        isGroupChecked(group) || isGroupIndeterminate(group),
+                    }"
                   >
                     <CheckIcon
                       v-if="isGroupChecked(group)"
-                      class="h-3.5 w-3.5 text-white"
+                      class="h-3.5 w-3.5 text-white dark:text-black"
+                    />
+                    <Minus
+                      v-else-if="isGroupIndeterminate(group)"
+                      class="h-3.5 w-3.5 text-white dark:text-black"
                     />
                   </div>
                 </label>
@@ -148,9 +160,14 @@ const allVisibleSelected = computed(() => {
               @click="togglePermission(perm.id)"
               class="cursor-pointer hover:bg-muted/40"
             >
-              <TableCell>{{ perm.name }}</TableCell>
-              <TableCell class="text-center w-25">
-                <CheckboxGroup :value="perm.id" :model-value="modelValue" @click.stop />
+              <TableCell class="ps-5">{{ perm.name }}</TableCell>
+              <TableCell class="text-center w-16">
+                <CheckboxGroup
+                  :value="perm.id"
+                  :model-value="modelValue"
+                  @update:modelValue="(val) => emit('update:modelValue', val)"
+                  @click.stop
+                />
               </TableCell>
             </TableRow>
           </TableBody>

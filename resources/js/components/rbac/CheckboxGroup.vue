@@ -36,7 +36,7 @@ const toggle = () => {
     >
       <!-- Slot icon check (optional override) -->
       <slot>
-        <CheckIcon class="h-3.5 w-3.5 text-white" v-if="isChecked" />
+        <CheckIcon class="h-3.5 w-3.5 text-white dark:text-black" v-if="isChecked" />
       </slot>
     </div>
     <span class="text-sm" v-if="label">{{ label }}</span>

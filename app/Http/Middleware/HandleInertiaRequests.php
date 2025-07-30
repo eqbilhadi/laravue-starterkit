@@ -65,6 +65,11 @@ class HandleInertiaRequests extends Middleware
         if ($user !== null) {
             return \Illuminate\Support\Facades\Cache::remember("menus.{$user->id}", now()->addHours(5), function () use ($user) {
                 return \App\Models\Menu::query()
+                    ->with(['children' => function ($query) use ($user) {
+                        $query->whereHas('roles', fn($query) => $query->whereIn('role_id', $user->roles->pluck('id')));
+                        $query->whereIsActive(true)->orderBy('sort_num', 'asc');
+                    }])
+                    ->whereNull('parent_id')
                     ->whereHas('roles', fn($query) => $query->whereIn('role_id', $user->roles->pluck('id')))
                     ->whereIsActive(true)
                     ->orderBy('sort_num', 'asc')

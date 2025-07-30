@@ -16,7 +16,7 @@ class CreateNavigationRequest extends FormRequest
         return [
             'icon' => 'required_if:is_divider,false|nullable|max:255',
             'label_name' => 'required|max:255',
-            'controller_name' => 'required_if:is_divider,false|nullable|max:255|unique:sys_menus,controller_name',
+            'controller_name' => 'nullable|max:255|unique:sys_menus,controller_name',
             'route_name' => 'required_if:is_divider,false|nullable|max:255',
             'url' => 'required_if:is_divider,false|nullable|max:255',
             'is_active' => 'boolean',

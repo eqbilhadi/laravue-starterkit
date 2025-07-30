@@ -18,7 +18,6 @@ class UpdateNavigationRequest extends FormRequest
             'icon' => 'required_if:is_divider,false|nullable|max:255',
             'label_name' => 'required|max:255',
             'controller_name' => [
-                'required_if:is_divider,false',
                 'nullable',
                 'max:255',
                 Rule::unique('sys_menus', 'controller_name')->ignore($this->sysMenu?->id),

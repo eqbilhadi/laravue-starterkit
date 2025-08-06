@@ -63,7 +63,7 @@ const pageInfo = computed(() => {
 
 <template>
   <div class="flex items-center w-full justify-between mt-0 text-sm text-gray-600">
-    <span>{{ pageInfo }}</span>
+    <span class="dark:text-muted-foreground">{{ pageInfo }}</span>
     <Pagination
       class="justify-end w-auto mx-0"
       :items-per-page="meta.per_page"

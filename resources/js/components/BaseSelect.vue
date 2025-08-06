@@ -14,8 +14,8 @@ defineOptions({
 })
 
 const props = defineProps<{
-  modelValue: string
-  options: { label: string; value: string }[]
+  modelValue: string | number
+  options: { label: string; value: string | number}[]
   placeholder?: string
   groupLabel?: string
 }>()

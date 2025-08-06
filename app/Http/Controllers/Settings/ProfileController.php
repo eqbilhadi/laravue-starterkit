@@ -32,19 +32,24 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
+        // Update field biasa selain avatar
         $user->fill($request->safe()->except('avatar'));
 
-        if ($request->hasFile('avatar')) {
-            // Hapus file lama jika perlu
-            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
-                Storage::disk('public')->delete($user->avatar);
-            }
+        $avatarFile = $request->file('avatar');
+        $avatarInput = $request->input('avatar');
 
-            // Simpan file baru
-            $path = $request->file('avatar')->store('avatars', 'public');
-            $user->avatar = $path;
+        // Hapus avatar lama jika perlu
+        if (($request->hasFile('avatar') || is_null($avatarInput)) && $user->avatar && Storage::disk('public')->exists($user->avatar)) {
+            Storage::disk('public')->delete($user->avatar);
+            $user->avatar = null;
         }
 
+        // Simpan avatar baru jika ada
+        if ($avatarFile) {
+            $user->avatar = $avatarFile->store('avatars', 'public');
+        }
+
+        // Reset email_verified_at jika email diubah
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }
@@ -53,6 +58,7 @@ class ProfileController extends Controller
 
         return to_route('profile.edit');
     }
+
 
     /**
      * Delete the user's profile.

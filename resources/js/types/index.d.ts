@@ -47,8 +47,15 @@ export interface User {
     id: number;
     name: string;
     email: string;
+    username: string;
+    gender: string;
+    birthplace: string;
+    birthdate: string;
+    is_active: number;
     avatar?: string;
     avatar_url?: string;
+    phone?: string;
+    address?: string;
     email_verified_at: string | null;
     created_at: string;
     updated_at: string;

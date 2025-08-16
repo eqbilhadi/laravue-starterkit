@@ -153,6 +153,7 @@ function handleDelete(item: Role) {
                 { label: 'Inactive', value: '0' },
               ]"
               placeholder="Select Status"
+              clearable
             />
             <Button
               variant="outline"

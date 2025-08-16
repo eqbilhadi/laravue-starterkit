@@ -180,6 +180,7 @@ const goToSortPage = () => {
                 { label: 'Inactive', value: '0' },
               ]"
               placeholder="Select Status"
+              clearable
             />
             <Button
               variant="outline"

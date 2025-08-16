@@ -164,6 +164,7 @@ function openEdit(permission: Permission) {
               v-model="group"
               :options="groups"
               placeholder="Select Group"
+              clearable
             />
             <Button
               variant="outline"
